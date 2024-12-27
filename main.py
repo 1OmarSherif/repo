@@ -16,7 +16,7 @@ import google.generativeai as genai
 genai.configure(api_key="AIzaSyCOkaGL-rl8_zXAFTIY6O9zyJjdtZp_wUE")
 model = genai.GenerativeModel("gemini-1.5-flash")
 # Flask app initialization
-app = Flask(_name_)
+app = Flask(__name__)  # Use __name__ instead of _name_
 
 # Pre-trained models (initialize these models once)
 processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
@@ -89,6 +89,8 @@ def generate_caption():
         return jsonify({'caption': caption})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+
 # Define the chatbot API endpoint
 @app.route("/chat", methods=["POST"])
 def chatbot():
@@ -109,5 +111,5 @@ def chatbot():
         return jsonify({"error": str(e)}), 500
 
 
-if _name_ == '_main_':
+if __name__ == '__main__':  # Use __name__ instead of _name_
     app.run(debug=True, host='0.0.0.0', port=5000)
