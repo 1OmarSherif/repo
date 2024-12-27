@@ -10,7 +10,11 @@ import nltk
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import torch
+import google.generativeai as genai
 
+# Configure the generative AI model
+genai.configure(api_key="AIzaSyCOkaGL-rl8_zXAFTIY6O9zyJjdtZp_wUE")
+model = genai.GenerativeModel("gemini-1.5-flash")
 # Flask app initialization
 app = Flask(_name_)
 
@@ -85,6 +89,24 @@ def generate_caption():
         return jsonify({'caption': caption})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+# Define the chatbot API endpoint
+@app.route("/chat", methods=["POST"])
+def chatbot():
+    try:
+        # Get user input from the request JSON body
+        user_input = request.json.get("user_input", "")
+        
+        if not user_input:
+            return jsonify({"error": "No user input provided"}), 400
+        
+        # Generate response using the generative AI model
+        response = model.generate_content(user_input)
+        
+        # Return the AI response as JSON
+        return jsonify({"AI_response": response.text})
+    
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if _name_ == '_main_':
