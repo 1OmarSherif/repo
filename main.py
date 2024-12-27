@@ -19,7 +19,7 @@ processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base
 model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
 
 # Example data and pipeline
-file_path = '/content/final.xlsx'
+file_path = './final.xlsx'
 df = pd.read_excel(file_path)  # Use pd.read_excel directly to read the Excel file into a DataFrame
 X = df[['skills_required', 'difficulty_level', 'category', 'keywords']].astype(str).agg(' '.join, axis=1)
 y = df['title']
