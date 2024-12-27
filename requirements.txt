@@ -2,9 +2,5 @@ flask
 pandas
 scikit-learn
 imbalanced-learn
-nltk
-transformers
-torch
-pillow
 google-generativeai
 openpyxl
