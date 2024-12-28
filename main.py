@@ -52,27 +52,7 @@ def predict():
         combined_features = f"{skills_required} {difficulty_level} {category} {keywords}"
 
         # Get probabilities for each class
-        probabilities = pipeline.predict_proba([combined_features])
-
-        # Get the top 5 predictions
-        top_indices = probabilities[0].argsort()[-5:][::-1]
-        top_predictions = []
-
-        for i in top_indices:
-            project_title = pipeline.classes_[i]
-            project_details = y_resampled[y_resampled['title'] == project_title].iloc[0]
-            top_predictions.append({
-                'id': project_details['id'],
-                'title': project_title,
-                'description': project_details['description'],
-                'links': project_details['links'],
-                'image': project_details['image'],
-                'probability': probabilities[0][i]
-            })
-
-        return jsonify({'top_predictions': top_predictions})
-    except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        probabilities = pipeline.predict_pro
 # Define the chatbot API endpoint
 @app.route("/chat", methods=["POST"])
 def chatbot():
