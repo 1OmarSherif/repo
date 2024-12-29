@@ -4,3 +4,4 @@ scikit-learn
 imbalanced-learn
 google-generativeai
 openpyxl
+flask-cors
