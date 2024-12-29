@@ -36,7 +36,7 @@ pipeline.fit(X_train, y_train)
 
 
 
-# Routes
+# Project prediction endpoint
 @app.route('/predict', methods=['POST'])
 def predict():
     try:
@@ -52,7 +52,29 @@ def predict():
         combined_features = f"{skills_required} {difficulty_level} {category} {keywords}"
 
         # Get probabilities for each class
-        probabilities = pipeline.predict_pro
+        probabilities = pipeline.predict_proba([combined_features])
+
+        # Get the top 5 predictions
+        top_indices = probabilities[0].argsort()[-5:][::-1]
+        top_predictions = []
+
+        for i in top_indices:
+            title = pipeline.classes_[i]
+            project = df[df['title'] == title].iloc[0]
+
+            # Include additional fields
+            top_predictions.append({
+                'id': project['id'],  # Ensure the ID column exists in your data
+                'title': title,
+                'description': project['description'],
+                'image': project['image'],  # Link or path to the image
+                'link': project['link'],    # Link to the project
+                'probability': probabilities[0][i]
+            })
+
+        return jsonify({'top_predictions': top_predictions})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # Define the chatbot API endpoint
 @app.route("/chat", methods=["POST"])
 def chatbot():
