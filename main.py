@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS  # Import the CORS module
 import pandas as pd
 from sklearn.pipeline import make_pipeline
 from sklearn.feature_extraction.text import CountVectorizer
@@ -10,10 +11,10 @@ import google.generativeai as genai
 # Configure the generative AI model
 genai.configure(api_key="AIzaSyCOkaGL-rl8_zXAFTIY6O9zyJjdtZp_wUE")
 model = genai.GenerativeModel("gemini-1.5-flash")
+
 # Flask app initialization
 app = Flask(__name__)  # Use __name__ instead of _name_
-
-
+CORS(app)  # Enable CORS for the entire app
 
 # Example data and pipeline
 file_path = './final.xlsx'
@@ -33,8 +34,6 @@ X_train, X_test, y_train, y_test = train_test_split(
 # Pipeline
 pipeline = make_pipeline(CountVectorizer(), MultinomialNB())
 pipeline.fit(X_train, y_train)
-
-
 
 # Project prediction endpoint
 @app.route('/predict', methods=['POST'])
@@ -75,6 +74,7 @@ def predict():
         return jsonify({'top_predictions': top_predictions})
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
 # Define the chatbot API endpoint
 @app.route("/chat", methods=["POST"])
 def chatbot():
@@ -94,6 +94,5 @@ def chatbot():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-
-if __name__ == '__main__':  # Use __name__ instead of _name_
+if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
